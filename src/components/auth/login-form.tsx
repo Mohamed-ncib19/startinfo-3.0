@@ -41,7 +41,7 @@ export function LoginForm() {
     setError('');
     try {
       const success = await login(data.email, data.password);
-
+      console.log(success)
       if (success) {
         navigate('/dashboard');
       } else {

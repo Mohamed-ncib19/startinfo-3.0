@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { createContext, useContext, useState } from 'react';
 
 interface AuthContextType {
@@ -44,6 +45,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const res = await fetch('http://localhost:5000/api/auth/login', {
@@ -57,8 +65,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const data = await res.json(); // Get the response data
   
       // Log the response data to see what the server is actually returning
-      console.log('Server response:', data);
-      console.log(data.ok)
+
   
       if (!data.ok) {
         throw new Error(data.message );
@@ -68,6 +75,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("Login success");
         setUser(data.user);
         localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user)); // <-- Add this line
         return true;
       } else {
         console.log("Missing token or user", data.token, data.user);
@@ -84,6 +92,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('user'); // <-- Add this line
   };
 
   return (

@@ -2,9 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Bot, BookOpen, Trophy, Users, Menu, X } from 'lucide-react';
+import { useAuth } from '@/contexts/auth-context';
 
 const Header = React.memo(function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+  const { user } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-background/80 border-b border-border">

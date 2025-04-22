@@ -7,6 +7,8 @@ import { AuthProvider } from '@/contexts/auth-context';
 import { ProtectedRoute } from '@/components/protected-route';
 import { Layout } from '@/components/layout';
 import { HomeLayout } from '@/components/home-layout';
+import { useAuth } from '@/contexts/auth-context';
+import { Navigate } from 'react-router-dom';
 
 // Pages
 import Index from '@/pages/Index';
@@ -54,9 +56,9 @@ const App = () => {
               {/* Public routes */}
               <Route element={<HomeLayout />}>
                 <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+                <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+                <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
               </Route>
 
               {/* Protected routes */}
@@ -91,3 +93,12 @@ const App = () => {
 };
 
 export default App;
+
+
+function PublicRoute({ children }) {
+  const { user } = useAuth();
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+}
