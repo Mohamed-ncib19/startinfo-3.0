@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Bot, BookOpen, Trophy, Users, Menu, X } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
+// Add any dropdown UI components you use, or use a simple menu
 
 const Header = React.memo(function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
-  const { user } = useAuth();
+  const { user, logout } = useAuth(); // Ensure logout is available
 
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-background/80 border-b border-border">
@@ -51,12 +52,41 @@ const Header = React.memo(function Header() {
         </nav>
 
         <div className="hidden md:flex items-center space-x-4">
-          <Link to="/login">
-            <Button variant="outline">Log in</Button>
-          </Link>
-          <Link to="/signup">
-            <Button>Sign up</Button>
-          </Link>
+          {!user ? (
+            <>
+              <Link to="/login">
+                <Button variant="outline">Log in</Button>
+              </Link>
+              <Link to="/signup">
+                <Button>Sign up</Button>
+              </Link>
+            </>
+          ) : (
+            <div className="relative group">
+              <Button className="flex items-center gap-2">
+                {user.avatar ? (
+                  <img src={user.avatar} alt="avatar" className="w-6 h-6 rounded-full" />
+                ) : (
+                  <span className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center">
+                    {user.name?.[0] || 'U'}
+                  </span>
+                )}
+                <span>{user.name || user.email}</span>
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </Button>
+              <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100">Profile</Link>
+                <button
+                  onClick={logout}
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <button className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -93,14 +123,18 @@ const Header = React.memo(function Header() {
               Community
             </Link>
             <div className="pt-2 space-y-2">
-              <Link to="/login" className="block w-full">
-                <Button variant="outline" className="w-full">
-                  Log in
-                </Button>
-              </Link>
-              <Link to="/signup" className="block w-full">
-                <Button className="w-full">Sign up</Button>
-              </Link>
+              {!user && (
+                <>
+                  <Link to="/login" className="block w-full">
+                    <Button variant="outline" className="w-full">
+                      Log in
+                    </Button>
+                  </Link>
+                  <Link to="/signup" className="block w-full">
+                    <Button className="w-full">Sign up</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

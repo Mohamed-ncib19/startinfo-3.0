@@ -114,7 +114,7 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.email}!</h1>
+          <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name} !</h1>
           <p className="text-muted-foreground">
             Track your progress and stay connected with the community
           </p>

@@ -189,6 +189,7 @@ const LessonDetail = () => {
       const response = await fetch(`${API_BASE_URL}/api/lessons/${numericLessonId}/progress`, {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
